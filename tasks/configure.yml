@@ -50,6 +50,9 @@
     group: mysql
     mode: 0755
     setype: mysqld_db_t
+  changed_when: false
+  failed_when: false
+  check_mode: false
 
 - name: Set ownership on slow query log file (if configured).
   file:
@@ -80,6 +83,15 @@
   when:
     - mysql_log | default(true)
     - mysql_log_error | default(false)
+  tags: ['skip_ansible_galaxy']
+
+- name: Resinitialize MySQL dataDir if needed
+  command: "mysqld --initialize-insecure --explicit_defaults_for_timestamp"
+  args:
+    creates: "{{ mysql_datadir }}/ibdata1"
+    warn: false
+  when:
+    - mysql_reinit_datadir_filesystem|bool
   tags: ['skip_ansible_galaxy']
 
 - name: Ensure MySQL is started and enabled on boot.

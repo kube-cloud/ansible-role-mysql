@@ -1,0 +1,48 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+   apparmor_mysql_profile_dir: "/path/to/mysql/apparmor"
+   apparmor_mysql_profile: "/path/to/mysql/apparmor/mysqld"
+   mysql_data_dir: "/path/to/mysql/datas"
+
+  tasks:
+
+   - name: "Create profile directory"
+     file:
+      path: "{{ apparmor_mysql_profile_dir }}"
+      state: directory
+      owner: root
+      group: root
+
+   - name: "Generate AppArmor mysql profile config"
+     template:
+      src: apparmor-mysql.j2
+      dest: "{{ apparmor_mysql_profile }}"
+      owner: root
+      group: root
+
+   - name: "Execute ansible-role-mysql role"
+     include_role:
+      name: ansible-role-mysql
+     vars:
+      mysql_app_armor_enabled: true
+      mysql_apparmor_profile_config: /etc/apparmor.d/usr.sbin.mysqld
+      mysql_apparmor_config_path_link:
+       - src: /my/apparmor/mysql/real/config
+       - link: /etc/apparmor.d/usr.sbin.mysqld
+      apparmor_profile_user: root
+      apparmor_profile_group: root
+      mysql_reinit_datadir_filesystem: true
+      mysql_datadir: "{{ mysql_data_dir }}"
+
+  post_tasks:
+   - name: Make sure we can connect to MySQL via Unix socket.
+     command: "mysql -u root -proot -e 'show databases;'"
+     changed_when: false
+
+   - name: Make sure we can connect to MySQL via TCP.
+     command: "mysql -u root -proot -h 127.0.0.1 -e 'show databases;'"
+     changed_when: false
