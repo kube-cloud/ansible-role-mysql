@@ -8,6 +8,21 @@
         - "vars/{{ ansible_os_family }}.yml"
       skip: true
 
+- name: Define Default Log Dir.
+  set_fact:
+    mysql_default_logdir: "{{ __mysql_default_logdir }}"
+  when: mysql_default_logdir is not defined
+
+- name: Define apparmor_daemon.
+  set_fact:
+    apparmor_daemon: "{{ __apparmor_daemon }}"
+  when: apparmor_daemon is not defined
+
+- name: Define MySQL Default Datadir.
+  set_fact:
+    mysql_default_datadir: "{{ __mysql_default_datadir }}"
+  when: mysql_default_datadir is not defined
+
 - name: Define mysql_packages.
   set_fact:
     mysql_packages: "{{ __mysql_packages | list }}"

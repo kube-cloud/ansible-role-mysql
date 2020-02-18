@@ -1,8 +1,11 @@
 ---
+__mysql_default_datadir: /var/lib/mysql
+__apparmor_daemon: apparmor
 __mysql_daemon: mysqld
 __mysql_packages:
   - mysql
   - mysql-server
+__mysql_default_logdir: /var/log
 __mysql_slow_query_log_file: /var/log/mysql-slow.log
 __mysql_log_error: /var/log/mysql.err
 __mysql_syslog_tag: mysql

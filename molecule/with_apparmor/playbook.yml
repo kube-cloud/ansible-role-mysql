@@ -1,0 +1,37 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  pre_tasks:
+
+   - name: "Set discovered Ansible Python interpreter."
+     set_fact:
+      ansible_python_interpreter: "{{ ansible_facts.python.executable }}"
+     when: ansible_python_interpreter is not defined
+
+   - name: "Show Python intrpreter"
+     debug:
+      msg: "Python Interpreter : {{ ansible_python_interpreter }}"
+
+  tasks:
+
+   - name: "Execute ansible-role-mysql role"
+     include_role:
+      name: ansible-role-mysql
+     vars:
+      mysql_apparmor_profile_config: "/etc/apparmor.d/usr.sbin.mysqld"
+      mysql_init_custom_datadir: true
+      mysql_datadir: "/path/to/mysql/datas"
+      mysql_root_password_update: true
+      mysql_user_password_update: true
+      mysql_logdir: /path/to/log
+
+  post_tasks:
+   - name: Make sure we can connect to MySQL via Unix socket.
+     command: "mysql -u root -proot -e 'show databases;'"
+     changed_when: false
+
+   - name: Make sure we can connect to MySQL via TCP.
+     command: "mysql -u root -proot -h 127.0.0.1 -e 'show databases;'"
+     changed_when: false

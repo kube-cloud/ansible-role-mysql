@@ -1,0 +1,156 @@
+---
+- name: "({{ ansible_distribution }}) MySQL::Config - Get MySQL version."
+  command: 'mysql --version'
+  register: mysql_cli_version
+  changed_when: false
+  check_mode: false
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Copy my.cnf global MySQL configuration."
+  template:
+    src: my.cnf.j2
+    dest: "{{ mysql_config_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: "{{ overwrite_global_mycnf }}"
+  notify: restart mysql
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Verify mysql include directory exists."
+  file:
+    path: "{{ mysql_config_include_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  when: mysql_config_include_files | length
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Copy my.cnf override files into include directory."
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ mysql_config_include_dir }}/{{ item.src | basename }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: "{{ item.force | default(False) }}"
+  with_items: "{{ mysql_config_include_files }}"
+  notify: restart mysql
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Ensure root log dir created"
+  file:
+    path: "{{ mysql_logdir }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: 0755
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Create slow query log file (if configured)."
+  command: "touch {{ mysql_slow_query_log_file }}"
+  args:
+    creates: "{{ mysql_slow_query_log_file }}"
+    warn: false
+  when: mysql_slow_query_log_enabled
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Create datadir if it does not exist"
+  file:
+    path: "{{ mysql_datadir }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: 0755
+    setype: mysqld_db_t
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Set ownership on slow query log file (if configured)."
+  file:
+    path: "{{ mysql_slow_query_log_file }}"
+    state: file
+    owner: mysql
+    group: "{{ mysql_log_file_group }}"
+    mode: 0755
+  when: mysql_slow_query_log_enabled
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Create error log file (if configured)."
+  command: "touch {{ mysql_log_error }}"
+  args:
+    creates: "{{ mysql_log_error }}"
+    warn: false
+  when:
+    - mysql_log | default(true)
+    - mysql_log_error | default(false)
+  tags: ['skip_ansible_galaxy']
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Set ownership on error log file (if configured)."
+  file:
+    path: "{{ mysql_log_error }}"
+    state: file
+    owner: mysql
+    group: "{{ mysql_log_file_group }}"
+    mode: 0755
+  when:
+    - mysql_log | default(true)
+    - mysql_log_error | default(false)
+  tags: ['skip_ansible_galaxy']
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Stop MySQL Daemon"
+  service:
+    name: "{{ mysql_daemon }}"
+    state: stopped
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: "Copy Data (From {{ mysql_default_datadir }} To {{ mysql_datadir }} )"
+  shell:
+  args:
+    cmd: "cp -R -p -f {{ mysql_default_datadir }}/* {{ mysql_datadir }}"
+    creates: "{{ mysql_datadir }}/ibdata1"
+    warn: true
+  when:
+    - mysql_init_custom_datadir
+    - mysql_default_datadir_installed
+    - mysql_default_datadir_not_empty
+  tags: ['skip_ansible_galaxy']
+
+- name: "Delete Default Data dir content ({{ mysql_default_datadir }})"
+  shell:
+  args:
+    cmd: "rm -rf {{ mysql_default_datadir }}/*"
+  when:
+    - mysql_default_datadir_installed
+    - mysql_default_datadir_not_empty
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Update AppArmor MySQL configuration"
+  replace:
+    dest: "{{ mysql_apparmor_profile_config }}"
+    regexp: "{{ item.old_value }}"
+    replace: "{{ item.new_value }}"
+  when:
+    - apparmor_mysql_profile_installed
+  loop:
+    - old_value: "{{ mysql_default_datadir }}"
+      new_value: "{{ mysql_datadir }}"
+    - old_value: "{{ mysql_default_logdir }}"
+      new_value: "{{ mysql_logdir }}"
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Reload AppArmor service"
+  service:
+    name: "{{ apparmor_daemon }}"
+    state: reloaded
+    enabled: true
+  when:
+    - apparmor_installed
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Ensure MySQL is started and enabled on boot."
+  service:
+    name: "{{ mysql_daemon }}"
+    state: started
+    enabled: "{{ mysql_enabled_on_startup }}"
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  register: mysql_service_configuration

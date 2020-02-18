@@ -1,0 +1,36 @@
+---
+- name: "({{ ansible_distribution }}) MAIN::MySQL - Check MySQL default data dir exists"
+  stat:
+    path: "{{ mysql_default_datadir }}"
+  register: mysql_default_datadir_exists_result
+
+- name: "({{ ansible_distribution }}) MAIN::MySQL - Get MySQL default data dir content"
+  find:
+    paths: "{{ mysql_default_datadir }}"
+    patterns: "*"
+  register: mysql_default_datadir_content_result
+
+- name: "({{ ansible_distribution }}) MAIN::AppArmor - Check AppArmor MySQL Configuration"
+  stat:
+    path: "{{ mysql_apparmor_profile_config }}"
+  register: apparmor_mysql_profile_exists_result
+
+- name: "({{ ansible_distribution }}) MAIN::AppArmor - Check AppArmor Service is installed"
+  shell:
+  args:
+    cmd: "service {{ apparmor_daemon }} status"
+    warn: false
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  register: apparmor_service_installed_result
+
+- name: "({{ ansible_distribution }}) MAIN::MySQL - Define commons facts"
+  set_fact:
+    mysql_install_packages: "{{ (rh_mysql_install_packages is defined and rh_mysql_install_packages.changed)
+      or (deb_mysql_install_packages is defined and deb_mysql_install_packages.changed)
+      or (arch_mysql_install_packages is defined and arch_mysql_install_packages.changed) }}"
+    apparmor_mysql_profile_installed: "{{ apparmor_mysql_profile_exists_result.stat.exists == true }}"
+    apparmor_installed: "{{ apparmor_service_installed_result.rc == 0 }}"
+    mysql_default_datadir_installed: "{{ mysql_default_datadir_exists_result.stat.exists == true }}"
+    mysql_default_datadir_not_empty: "{{ mysql_default_datadir_content_result.matched > 0 }}"

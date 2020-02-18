@@ -55,4 +55,7 @@
     - (slave.Is_Slave is defined and not slave.Is_Slave) or (slave.Is_Slave is not defined and slave is failed)
     - mysql_replication_role == 'slave'
     - mysql_replication_master | default(false)
+  changed_when: false
+  failed_when: false
+  check_mode: false
   tags: ['skip_ansible_galaxy']

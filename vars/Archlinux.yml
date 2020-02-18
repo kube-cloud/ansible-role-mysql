@@ -1,7 +1,10 @@
 ---
+__apparmor_daemon: apparmor
+__mysql_default_datadir: /var/lib/mysql
 __mysql_daemon: mariadb
 __mysql_packages:
   - mariadb
+__mysql_default_logdir: /var/log
 __mysql_slow_query_log_file: /var/log/mysql/mysql-slow.log
 __mysql_log_error: /var/log/mysql.err
 __mysql_syslog_tag: mysql

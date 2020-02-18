@@ -15,15 +15,16 @@
     dest: "{{ mysql_user_home }}/.my.cnf"
     owner: "{{ mysql_user_name }}"
     mode: 0600
-  when: >
-    mysql_user_name != mysql_root_username
-    and (mysql_install_packages | bool or mysql_user_password_update)
+  when:
+    - mysql_user_name != mysql_root_username
+    - (mysql_install_packages | bool or mysql_user_password_update)
 
 - name: Disallow root login remotely
   command: 'mysql -NBe "{{ item }}"'
   with_items:
     - DELETE FROM mysql.user WHERE User='{{ mysql_root_username }}' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
   changed_when: false
+  sudo: true
 
 - name: Get list of hosts for the root user.
   command: mysql -NBe
@@ -45,9 +46,12 @@
     'ALTER USER "{{ mysql_root_username }}"@"{{ item }}"
     IDENTIFIED WITH mysql_native_password BY "{{ mysql_root_password }}";'
   with_items: "{{ mysql_root_hosts.stdout_lines|default([]) }}"
-  when: >
-    ((mysql_install_packages | bool) or mysql_root_password_update)
-    and ('5.7.' in mysql_cli_version.stdout or '8.0.' in mysql_cli_version.stdout)
+  when:
+    - (mysql_install_packages | bool) or mysql_root_password_update
+    - ('5.7.' in mysql_cli_version.stdout) or ('8.0.' in mysql_cli_version.stdout)
+  changed_when: false
+  failed_when: false
+  check_mode: false
 
 # Set root password for MySQL < 5.7.x.
 - name: Update MySQL root password for localhost root account (< 5.7.x).
@@ -55,9 +59,12 @@
     mysql -NBe
     'SET PASSWORD FOR "{{ mysql_root_username }}"@"{{ item }}" = PASSWORD("{{ mysql_root_password }}");'
   with_items: "{{ mysql_root_hosts.stdout_lines|default([]) }}"
-  when: >
-    ((mysql_install_packages | bool) or mysql_root_password_update)
-    and ('5.7.' not in mysql_cli_version.stdout and '8.0.' not in mysql_cli_version.stdout)
+  when:
+    - (mysql_install_packages | bool) or mysql_root_password_update
+    - ('5.7.' not in mysql_cli_version.stdout and '8.0.' not in mysql_cli_version.stdout)
+  changed_when: false
+  failed_when: false
+  check_mode: false
 
 # Has to be after the root password assignment, for idempotency.
 - name: Copy .my.cnf file with root password credentials.

@@ -4,7 +4,18 @@
   become: true
 
   roles:
-    - role: geerlingguy.mysql
+    - role: ansible-role-mysql
+
+  pre_tasks:
+
+    - name: "Set discovered Ansible Python interpreter."
+      set_fact:
+        ansible_python_interpreter: "{{ ansible_facts.python.executable }}"
+      when: ansible_python_interpreter is not defined
+
+    - name: "Show Python intrpreter"
+      debug:
+        msg: "Python Interpreter : {{ ansible_python_interpreter }}"
 
   post_tasks:
     - name: Make sure we can connect to MySQL via Unix socket.
