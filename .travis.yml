@@ -1,5 +1,9 @@
 ---
+
+# Initialize the Language
 language: python
+
+# Declare Docker Service to be used in the build
 services: docker
 
 # Environments variables for test
@@ -7,7 +11,7 @@ env:
 
     # Global
     global:
-        - ROLE_NAME: initserver
+        - ROLE_NAME: mysql
         - AUTHOR: jetune
     matrix:
         - MOLECULE_DISTRO: centos6
@@ -22,13 +26,18 @@ before_install:
     - docker pull kubecloudsas/docker-ansible-test:ubuntu16
     - docker pull kubecloudsas/docker-ansible-test:ubuntu18
 
+# Installation actions
 install:
-  # Install test dependencies.
-  - pip install molecule docker
 
+    # Install Test tools
+    - pip install molecule docker flake8
+
+# Test scripts
 script:
-  # Run tests.
-  - molecule test --all
 
+    # Run Tests
+    - molecule test --all
+
+# Norifications
 notifications:
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+    webhooks: https://galaxy.ansible.com/api/v1/notifications/

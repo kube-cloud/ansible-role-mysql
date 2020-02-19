@@ -1,4 +1,4 @@
-# Ansible Role: MySQL
+# Ansible Role: MySQL [Thank's to Jeff Geerling]
 
 ![Python](https://img.shields.io/pypi/pyversions/testinfra.svg?style=flat)
 ![Licence](https://img.shields.io/github/license/kube-cloud/ansible-role-mysql.svg?style=flat)
