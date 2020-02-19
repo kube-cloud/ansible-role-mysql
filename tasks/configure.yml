@@ -85,13 +85,14 @@
     - mysql_log_error | default(false)
   tags: ['skip_ansible_galaxy']
 
-- name: Resinitialize MySQL dataDir if needed
+- name: Resinitialize MySQL dataDir if needed for [Debian Based OS]
   command: "mysqld --initialize-insecure --explicit_defaults_for_timestamp"
   args:
     creates: "{{ mysql_datadir }}/ibdata1"
     warn: false
   when:
     - mysql_reinit_datadir_filesystem|bool
+    - ansible_os_family == "Debian"
   tags: ['skip_ansible_galaxy']
 
 - name: Ensure MySQL is started and enabled on boot.

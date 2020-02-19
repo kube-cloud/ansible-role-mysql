@@ -32,7 +32,7 @@
       mysql_apparmor_profile_config: /etc/apparmor.d/usr.sbin.mysqld
       mysql_apparmor_config_path_link:
        - src: /my/apparmor/mysql/real/config
-       - link: /etc/apparmor.d/usr.sbin.mysqld
+         link: /etc/apparmor.d/usr.sbin.mysqld
       apparmor_profile_user: root
       apparmor_profile_group: root
       mysql_reinit_datadir_filesystem: true
