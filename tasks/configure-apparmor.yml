@@ -23,8 +23,18 @@
 - name: "({{ ansible_distribution }}) AppArmor::Config - Tasks block (Installed : {{ apparmor_parser_version.rc == 0 }})"
   block:
 
-    # Ensure MySQL AppArmor config profile links is present
-    - name: "({{ ansible_distribution }}) AppArmor::Config - Ensure MySQL AppArmor config profile links is present"
+    # Ensure Old MySQL AppArmor config profile links are deleted
+    - name: "({{ ansible_distribution }}) AppArmor::Config - Ensure Old MySQL AppArmor config profile links are deleted"
+      file:
+        path: "{{ item.link }}"
+        state: absent
+      loop: "{{ mysql_apparmor_config_path_link }}"
+      changed_when: false
+      failed_when: false
+      check_mode: false
+
+    # Ensure MySQL AppArmor config profile links are present
+    - name: "({{ ansible_distribution }}) AppArmor::Config - Ensure MySQL AppArmor config profile links are present"
       file:
         src: "{{ item.src }}"
         dest: "{{ item.link }}"
@@ -32,6 +42,9 @@
         group: "{{ apparmor_profile_group }}"
         state: link
       loop: "{{ mysql_apparmor_config_path_link }}"
+      changed_when: false
+      failed_when: false
+      check_mode: false
       notify: reload apparmor
 
   when: apparmor_parser_version.rc == 0

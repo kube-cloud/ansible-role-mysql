@@ -31,7 +31,7 @@
       mysql_app_armor_enabled: true
       mysql_apparmor_profile_config: /etc/apparmor.d/usr.sbin.mysqld
       mysql_apparmor_config_path_link:
-       - src: /my/apparmor/mysql/real/config
+       - src: "{{ apparmor_mysql_profile }}"
          link: /etc/apparmor.d/usr.sbin.mysqld
       apparmor_profile_user: root
       apparmor_profile_group: root
