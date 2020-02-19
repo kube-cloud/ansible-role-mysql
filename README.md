@@ -1,8 +1,14 @@
 # Ansible Role: MySQL
 
-[![Build Status](https://travis-ci.org/geerlingguy/ansible-role-mysql.svg?branch=master)](https://travis-ci.org/geerlingguy/ansible-role-mysql)
+![Python](https://img.shields.io/pypi/pyversions/testinfra.svg?style=flat)
+![Licence](https://img.shields.io/github/license/kube-cloud/ansible-role-mysql.svg?style=flat)
+[![Travis Build](https://img.shields.io/travis/kube-cloud/ansible-role-mysql.svg?style=flat)](https://travis-ci.com/kube-cloud/ansible-role-mysql)
+[![Galaxy Role Downloads](https://img.shields.io/ansible/role/d/45932.svg?style=flat)](https://galaxy.ansible.com/jetune/mysql)
 
 Installs and configures MySQL or MariaDB server on RHEL/CentOS or Debian/Ubuntu servers.
+
+<a href="https://www.kube-cloud.com/"><img width="250" src="https://kube-cloud.com/images/branding/logo/kubecloud-logo-single_writing_horizontal_color_300x112px.png" /></a>
+<a href="https://www.redhat.com/fr/technologies/management/ansible"><img width="300" src="https://getvectorlogo.com/wp-content/uploads/2019/01/red-hat-ansible-vector-logo.png" /></a>
 
 ## Requirements
 
