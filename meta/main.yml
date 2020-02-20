@@ -1,29 +1,34 @@
 ---
-dependencies: []
-
 galaxy_info:
-  author: geerlingguy
-  description: MySQL server for RHEL/CentOS and Debian/Ubuntu.
-  company: "Midwestern Mac, LLC"
-  license: "license (BSD, MIT)"
-  min_ansible_version: 2.4
-  platforms:
-    - name: EL
-      versions:
-        - 6
-        - 7
-    - name: Ubuntu
-      versions:
-        - all
-    - name: Debian
-      versions:
-        - all
-    - name: Archlinux
-      versions:
-        - all
-  galaxy_tags:
-    - database
-    - mysql
-    - mariadb
-    - db
-    - sql
+    author: jetune
+    role_name: mysql
+    description: Mysql installation ansible role [Fork From Jeff Geerling]
+    company: "Kube Cloud"
+    issue_tracker_url: https://github.com/kube-cloud/ansible-role-mysql.git
+    license: "license (Apache 2.0)"
+    min_ansible_version: 2.8
+    github_branch: master
+    platforms:
+        - name: EL
+          versions:
+              - 6
+              - 7
+        - name: Debian
+          versions:
+              - jessie
+              - strech
+        - name: Ubuntu
+          versions:
+              - all
+        - name: Archlinux
+          versions:
+              - all
+    galaxy_tags:
+        - development
+        - database
+        - mysql
+        - mariadb
+        - db
+        - sql
+
+dependencies: []

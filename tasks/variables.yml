@@ -8,6 +8,11 @@
         - "vars/{{ ansible_os_family }}.yml"
       skip: true
 
+- name: Define apparmor_daemon.
+  set_fact:
+    apparmor_daemon: "{{ __apparmor_daemon }}"
+  when: apparmor_daemon is not defined
+
 - name: Define mysql_packages.
   set_fact:
     mysql_packages: "{{ __mysql_packages | list }}"

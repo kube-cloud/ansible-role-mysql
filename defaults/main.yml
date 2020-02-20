@@ -1,5 +1,24 @@
 ---
-# Set this to the user ansible is logging in as - should have root
+# Enable AppArmor configuration
+mysql_app_armor_enabled: false
+
+# AppArmor mysql profile
+mysql_apparmor_profile_config: /etc/apparmor.d/usr.sbin.mysqld
+
+# MySQL AppArmor Paths
+mysql_apparmor_config_path_link: []
+#  - src: /my/apparmor/mysql/real/config
+#    link: /etc/apparmor.d/usr.sbin.mysqld
+
+# User that own link to mysql apparmor config files
+apparmor_profile_user: root
+
+# Group that own link to mysql apparmor config files
+apparmor_profile_group: root
+
+# Whether you need to regenerate datadir filesystem
+mysql_reinit_datadir_filesystem: false
+
 # or sudo access
 mysql_user_home: /root
 mysql_user_name: root
@@ -34,7 +53,7 @@ mysql_enablerepo: ""
 #   - mysql-server
 #   - MySQL-python
 
-# MySQL connection settings.
+# MySQL connection settings
 mysql_port: "3306"
 mysql_bind_address: '0.0.0.0'
 mysql_skip_name_resolve: false
