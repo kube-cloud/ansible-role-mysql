@@ -1,30 +1,43 @@
 ---
+
+# Initialize the Language
 language: python
+
+# Declare Docker Service to be used in the build
 services: docker
 
+# Environments variables for test
 env:
-  global:
-    - ROLE_NAME: mysql
-  matrix:
-    - MOLECULE_DISTRO: centos7
-    - MOLECULE_DISTRO: centos6
-    - MOLECULE_DISTRO: ubuntu1804
-    - MOLECULE_DISTRO: ubuntu1604
-    - MOLECULE_DISTRO: debian10
 
+    # Global
+    global:
+        - ROLE_NAME: mysql
+        - AUTHOR: jetune
+    matrix:
+        - MOLECULE_DISTRO: centos6
+        - MOLECULE_DISTRO: centos7
+        - MOLECULE_DISTRO: ubuntu16
+        - MOLECULE_DISTRO: ubuntu18
+
+# Before install actions
+before_install:
+    - docker pull kubecloudsas/docker-ansible-test:centos6
+    - docker pull kubecloudsas/docker-ansible-test:centos7
+    - docker pull kubecloudsas/docker-ansible-test:ubuntu16
+    - docker pull kubecloudsas/docker-ansible-test:ubuntu18
+
+# Installation actions
 install:
-  # Install test dependencies.
-  - pip install molecule yamllint ansible-lint docker
 
-before_script:
-  # Use actual Ansible Galaxy role name for the project directory.
-  - cd ../
-  - mv ansible-role-$ROLE_NAME geerlingguy.$ROLE_NAME
-  - cd geerlingguy.$ROLE_NAME
+    # Install Test tools
+    - pip install molecule docker flake8
 
+# Test scripts
 script:
-  # Run tests.
-  - molecule test
 
+    # Run Tests
+    - molecule test --all
+
+# Norifications
 notifications:
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+    webhooks: https://galaxy.ansible.com/api/v1/notifications/
