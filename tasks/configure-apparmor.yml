@@ -45,6 +45,15 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      notify: reload apparmor
+
+    # Ensure AppArmor service restarted
+    - name: reload apparmor
+      service:
+        name: "{{ apparmor_daemon }}"
+        state: restarted
+        sleep: 5
+      changed_when: false
+      failed_when: false
+      check_mode: false
 
   when: apparmor_parser_version.rc == 0
