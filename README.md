@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/pypi/pyversions/testinfra.svg?style=flat)
 ![Licence](https://img.shields.io/github/license/kube-cloud/ansible-role-mysql.svg?style=flat)
 [![Travis Build](https://img.shields.io/travis/kube-cloud/ansible-role-mysql.svg?style=flat)](https://travis-ci.com/kube-cloud/ansible-role-mysql)
-[![Galaxy Role Downloads](https://img.shields.io/ansible/role/d/45932.svg?style=flat)](https://galaxy.ansible.com/jetune/mysql)
+[![Galaxy Role Downloads](https://img.shields.io/ansible/role/d/46691.svg?style=flat)](https://galaxy.ansible.com/jetune/mysql)
 
 Installs and configures MySQL or MariaDB server on RHEL/CentOS or Debian/Ubuntu servers.
 
