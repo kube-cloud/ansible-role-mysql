@@ -30,7 +30,7 @@ before_install:
 install:
 
     # Install Test tools
-    - pip install molecule docker flake8
+    - pip install molecule yamllint ansible-lint docker flake8
 
 # Test scripts
 script:
