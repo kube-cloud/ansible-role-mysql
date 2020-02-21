@@ -7,10 +7,9 @@ dependency:
     enabled: true
 driver:
     name: docker
-lint:
-    name: yamllint
-    options:
-        config-file: molecule/with_apparmor/yaml-lint.yml
+lint: |
+  yamllint .
+  ansible-lint
 platforms:
     - name: ${MOLECULE_DISTRO:-ubuntu16}
       image: "kubecloudsas/docker-ansible-test:${MOLECULE_DISTRO:-ubuntu16}"
