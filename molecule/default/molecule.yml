@@ -3,9 +3,10 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint: |
-  yamllint .
-  ansible-lint
+lint:
+  name: yamllint
+  options:
+    config-file: molecule/default/yaml-lint.yml
 platforms:
   - name: ${MOLECULE_DISTRO:-ubuntu16}
     image: "kubecloudsas/docker-ansible-test:${MOLECULE_DISTRO:-ubuntu16}"
