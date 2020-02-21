@@ -9,7 +9,6 @@ driver:
     name: docker
 lint: |
     yamllint .
-    ansible-lint
 platforms:
     - name: ${MOLECULE_DISTRO:-ubuntu16}
       image: "kubecloudsas/docker-ansible-test:${MOLECULE_DISTRO:-ubuntu16}"
