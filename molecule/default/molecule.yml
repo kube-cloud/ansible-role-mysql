@@ -33,18 +33,6 @@ provisioner:
         converge: ${MOLECULE_PLAYBOOK:-convergence.yml}
 scenario:
     name: default
-    test_sequence:
-        - lint
-        - dependency
-        - syntax
-        - create
-        - prepare
-        - converge
-        - idempotence
-        - side_effect
-        - verify
-        - cleanup
-        - destroy
 verifier:
     name: testinfra
     lint:
