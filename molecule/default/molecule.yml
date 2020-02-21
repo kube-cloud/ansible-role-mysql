@@ -17,5 +17,11 @@ platforms:
     pull: true
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: molecule/roles
+  lint:
+    name: ansible-lint
+    options:
+      force-color: true
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
