@@ -90,6 +90,9 @@
     path: "{{ mysql_datadir }}/kfile.txt"
     state: touch
     mode: u=rw,g=r,o=r
+  changed_when: false
+  failed_when: false
+  check_mode: false
 
 - name: Resinitialize MySQL dataDir if needed for [Debian Based OS]
   command: "mysqld --initialize-insecure --explicit_defaults_for_timestamp"
