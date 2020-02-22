@@ -85,8 +85,14 @@
     - mysql_log_error | default(false)
   tags: ['skip_ansible_galaxy']
 
+- name: Create empty file
+  file:
+    path: "{{ mysql_datadir }}/kfile.txt"
+    state: touch
+    mode: u=rw,g=r,o=r
+
 - name: Resinitialize MySQL dataDir if needed for [Debian Based OS]
-  command: "sudo mysqld --initialize-insecure --explicit_defaults_for_timestamp"
+  command: "mysqld --initialize-insecure --explicit_defaults_for_timestamp"
   args:
     creates: "{{ mysql_datadir }}/ibdata1"
     warn: false
