@@ -21,10 +21,6 @@
 
   tasks:
 
-   - name: "Install Myql Python"
-     pip:
-      name: "PyMySQL"
-
    - name: "Create profile directory"
      file:
       path: "{{ apparmor_mysql_profile_dir }}"
