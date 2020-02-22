@@ -86,7 +86,7 @@
   tags: ['skip_ansible_galaxy']
 
 - name: Resinitialize MySQL dataDir if needed for [Debian Based OS]
-  command: "mysqld --initialize-insecure --explicit_defaults_for_timestamp"
+  command: "sudo mysqld --initialize-insecure --explicit_defaults_for_timestamp"
   args:
     creates: "{{ mysql_datadir }}/ibdata1"
     warn: false
