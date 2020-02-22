@@ -85,14 +85,6 @@
     - mysql_log_error | default(false)
   tags: ['skip_ansible_galaxy']
 
-- name: Delete data directory if exists
-  file:
-    path: "{{ mysql_datadir }}"
-    state: absent
-  when:
-    - mysql_reinit_datadir_filesystem|bool
-    - ansible_os_family == "Debian"
-
 - name: Resinitialize MySQL dataDir if needed for [Debian Based OS]
   command: "mysqld --initialize-insecure --explicit_defaults_for_timestamp"
   args:
