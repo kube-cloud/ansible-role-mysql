@@ -8,10 +8,10 @@
 
   pre_tasks:
 
-   - name: "Set discovered Ansible Python interpreter."
-     set_fact:
-      ansible_python_interpreter: "{{ ansible_facts.python.executable }}"
-     when: ansible_python_interpreter is not defined
+    - name: "Set discovered Ansible Python interpreter."
+      set_fact:
+        ansible_python_interpreter: "{{ ansible_facts.python.executable }}"
+      when: ansible_python_interpreter is not defined
 
    - name: "Show Python intrpreter"
      debug:
