@@ -24,6 +24,8 @@
   with_items:
     - DELETE FROM mysql.user WHERE User='{{ mysql_root_username }}' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
   changed_when: false
+  tags:
+    - molecule-idempotence-notest
 
 - name: Get list of hosts for the root user.
   command: mysql -NBe
@@ -35,6 +37,8 @@
   changed_when: false
   check_mode: false
   when: mysql_install_packages | bool or mysql_root_password_update
+  tags:
+    - molecule-idempotence-notest
 
 # Note: We do not use mysql_user for this operation, as it doesn't always update
 # the root password correctly. See: https://goo.gl/MSOejW
@@ -48,6 +52,8 @@
   when: >
     ((mysql_install_packages | bool) or mysql_root_password_update)
     and ('5.7.' in mysql_cli_version.stdout or '8.0.' in mysql_cli_version.stdout)
+  tags:
+    - molecule-idempotence-notest
 
 # Set root password for MySQL < 5.7.x.
 - name: Update MySQL root password for localhost root account (< 5.7.x).
@@ -58,6 +64,8 @@
   when: >
     ((mysql_install_packages | bool) or mysql_root_password_update)
     and ('5.7.' not in mysql_cli_version.stdout and '8.0.' not in mysql_cli_version.stdout)
+  tags:
+    - molecule-idempotence-notest
 
 # Has to be after the root password assignment, for idempotency.
 - name: Copy .my.cnf file with root password credentials.
