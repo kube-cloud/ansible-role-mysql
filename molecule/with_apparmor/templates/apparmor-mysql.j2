@@ -68,7 +68,7 @@
   /var/log/mysql.err rw,
   /var/log/mysql.log rw,
   /var/log/mysql/ r,
-  {{ mysql_data_dir }}/**  rwk,
+  {{ mysql_datadir_link_target }}/**  rwk,
 
 # Allow read access to OpenSSL config
   /etc/ssl/openssl.cnf r,

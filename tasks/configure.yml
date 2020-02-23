@@ -85,15 +85,56 @@
     - mysql_log_error | default(false)
   tags: ['skip_ansible_galaxy']
 
-- name: Resinitialize MySQL dataDir if needed for [Debian Based OS]
-  command: "mysqld --initialize-insecure --explicit_defaults_for_timestamp"
-  args:
-    creates: "{{ mysql_datadir }}/ibdata1"
-    warn: false
+# Tasks block
+- name: "({{ ansible_distribution }}) MySQL::Config - Link Data Dir Block"
+  block:
+
+    - name: Delete Datadir Link Target if required
+      file:
+        path: "{{ mysql_datadir_link_target }}"
+        state: absent
+      when:
+        - mysql_init_datadir_link_target|bool
+
+    - name: Create Datadir Link Target if required
+      file:
+        path: "{{ mysql_datadir_link_target }}"
+        state: directory
+        owner: mysql
+        group: mysql
+        mode: 0755
+        setype: mysqld_db_t
+      changed_when: false
+      failed_when: false
+      check_mode: false
+
+    - name: Initialize MySQL dataDir Link Target if needed for
+      shell: "cp -rpf {{ mysql_datadir }}/* {{ mysql_datadir_link_target }}"
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      when:
+        - mysql_init_datadir_link_target|bool
+
+    - name: Delete datadir if it exist
+      file:
+        path: "{{ mysql_datadir }}"
+        state: absent
+
+    - name: Create datadir link if it does not exist
+      file:
+        src: "{{ mysql_datadir_link_target }}"
+        dest: "{{ mysql_datadir }}"
+        state: link
+        owner: mysql
+        group: mysql
+        mode: 0755
+      changed_when: false
+      failed_when: false
+      check_mode: false
+
   when:
-    - mysql_reinit_datadir_filesystem|bool
-    - ansible_os_family == "Debian"
-  tags: ['skip_ansible_galaxy']
+    - mysql_datadir_link_target is defined
 
 - name: Ensure MySQL is started and enabled on boot.
   service: "name={{ mysql_daemon }} state=started enabled={{ mysql_enabled_on_startup }}"

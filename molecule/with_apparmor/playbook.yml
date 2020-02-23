@@ -6,7 +6,7 @@
   vars:
    apparmor_mysql_profile_dir: "/path/to/mysql/apparmor"
    apparmor_mysql_profile: "/path/to/mysql/apparmor/mysqld"
-   mysql_data_dir: "/path/to/mysql/datas"
+   mysql_datadir_link_target: "/path/to/mysql/datas"
 
   pre_tasks:
 
@@ -46,8 +46,7 @@
          link: /etc/apparmor.d/usr.sbin.mysqld
       apparmor_profile_user: root
       apparmor_profile_group: root
-      mysql_reinit_datadir_filesystem: true
-      mysql_datadir: "{{ mysql_data_dir }}"
+      mysql_init_datadir_link_target: true
 
   post_tasks:
    - name: Make sure we can connect to MySQL via Unix socket.

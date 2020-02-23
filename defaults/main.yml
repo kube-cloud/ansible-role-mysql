@@ -19,8 +19,12 @@ apparmor_profile_group: root
 # Waiting time after restart apparmor
 apparmor_waiting_seconds_after_restart: 5
 
+
+# MySQL Datadir Link target
+# mysql_datadir_link_target: /app/mysql/datas
+
 # Whether you need to regenerate datadir filesystem
-mysql_reinit_datadir_filesystem: false
+mysql_init_datadir_link_target: false
 
 # or sudo access
 mysql_user_home: /root

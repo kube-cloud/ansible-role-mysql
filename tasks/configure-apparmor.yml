@@ -47,7 +47,7 @@
       check_mode: false
 
     # Ensure AppArmor service restarted
-    - name: Reload apparmor
+    - name: "({{ ansible_distribution }}) AppArmor::Config - Reload AppArmor"
       service:
         name: "{{ apparmor_daemon }}"
         state: reloaded
@@ -55,12 +55,4 @@
       failed_when: false
       check_mode: false
 
-    # Wait for a few
-    - name: restart apparmor
-      pause:
-        seconds: "{{ apparmor_waiting_seconds_after_restart|default(5) }}"
-      changed_when: false
-      failed_when: false
-      check_mode: false
-
-  when: apparmor_parser_version.rc == 0
+  when: apparmor_installed|bool
