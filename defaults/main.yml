@@ -133,8 +133,15 @@ mysql_binlog_format: "ROW"
 mysql_expire_logs_days: "10"
 mysql_replication_role: ''
 mysql_replication_master: ''
+
 # Same keys as `mysql_users` above.
 mysql_replication_user: []
 
 # Mysql Conf
 mysql_default_storage_engine: "INNODB"
+
+# Default character set server
+# mysql_character_set_server: "utf8mb4"
+
+# Default collation server
+# mysql_collation_server: "utf8mb4_bin"
