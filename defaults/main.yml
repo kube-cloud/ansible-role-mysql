@@ -141,7 +141,7 @@ mysql_replication_user: []
 mysql_default_storage_engine: "INNODB"
 
 # Default character set server
-mysql_character_set_server: "utf8mb4"
+mysql_character_set_server: "utf8"
 
 # Default collation server
-mysql_collation_server: "utf8mb4_bin"
+mysql_collation_server: "utf8_general_ci"
