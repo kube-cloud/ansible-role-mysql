@@ -21,11 +21,15 @@ sql_mode = {{ mysql_sql_mode }}
 default-storage-engine = {{ mysql_default_storage_engine }}
 {% endif %}
 {% if mysql_character_set_server is defined %}
-character-set-server = {{ mysql_character_set_server }}
+character_set_server = {{ mysql_character_set_server }}
 {% endif %}
 {% if mysql_collation_server is defined %}
-collation-server = {{ mysql_collation_server }}
+collation_server = {{ mysql_collation_server }}
 {% endif %}
+{% if mysql_innodb_default_row_format is defined %}
+innodb_default_row_format = {{ mysql_innodb_default_row_format }}
+{% endif %}
+
 
 # Logging configuration.
 {% if mysql_log_error == 'syslog' or mysql_log == 'syslog' %}
