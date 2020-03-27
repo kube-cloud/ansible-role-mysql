@@ -4,4 +4,4 @@
 
 - name: daemon-reload mysql
   shell:
-    cmd: "systemctl daemon-reload{{ mysql_daemon }}"
+    cmd: "systemctl daemon-reload {{ mysql_daemon }}"
