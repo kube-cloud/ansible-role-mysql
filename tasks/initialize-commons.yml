@@ -63,7 +63,7 @@
     - mysql_service_file_stat.stat.exists | bool
   tags:
     - molecule-idempotence-notest
-  notify: daemon-reload mysql
+  notify: daemon reload
 
 - name: "({{ ansible_distribution }}) MySQL::Config - Generate mariadb service file."
   template:
@@ -77,4 +77,4 @@
     - maria_service_file_stat.stat.exists | bool
   tags:
     - molecule-idempotence-notest
-  notify: daemon-reload mysql
+  notify: daemon reload
