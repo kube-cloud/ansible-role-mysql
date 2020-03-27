@@ -145,3 +145,9 @@ mysql_character_set_server: "utf8"
 
 # Default collation server
 mysql_collation_server: "utf8_general_ci"
+
+# Mysql After services
+mysql_services_after: "syslog.target network.target local-fs.target remote-fs.target"
+
+# Mysql Require services
+mysql_services_require: "{{ mysql_services_after }}"

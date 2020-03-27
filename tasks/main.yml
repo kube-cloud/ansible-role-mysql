@@ -12,7 +12,7 @@
 - include_tasks: setup-Archlinux.yml
   when: ansible_os_family == 'Archlinux'
 
-- include_tasks: initialize-commons-facts.yml
+- include_tasks: initialize-commons.yml
 
 # Configure MySQL Default.
 - name: "({{ ansible_distribution }}) MAIN::Include - Configure MySQL with default 'DataDir'"

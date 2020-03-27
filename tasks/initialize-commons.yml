@@ -1,4 +1,20 @@
 ---
+
+- name: "({{ ansible_distribution }}) MAIN::MySQL - Define mysql/maria service descriptor path"
+  set_fact:
+    mysql_service_descriptor_location: "/lib/systemd/system/mysql.service"
+    maria_service_descriptor_location: "/usr/lib/systemd/system/mariadb.service"
+
+- name: "({{ ansible_distribution }}) MAIN::MySQL - Check Mysql service file exists"
+  stat:
+    path: "{{ mysql_service_descriptor_location }}"
+  register: mysql_service_file_stat
+
+- name: "({{ ansible_distribution }}) MAIN::MySQL - Check MariaDB service file exists"
+  stat:
+    path: "{{ maria_service_descriptor_location }}"
+  register: maria_service_file_stat
+
 - name: "({{ ansible_distribution }}) MAIN::MySQL - Check MySQL default data dir exists"
   stat:
     path: "{{ mysql_default_datadir }}"
@@ -34,3 +50,31 @@
     apparmor_installed: "{{ apparmor_service_installed_result.rc == 0 }}"
     mysql_default_datadir_installed: "{{ mysql_default_datadir_exists_result.stat.exists == true }}"
     mysql_default_datadir_not_empty: "{{ mysql_default_datadir_content_result.matched > 0 }}"
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Generate mysql service file."
+  template:
+    src: mysql.service.j2
+    dest: "{{ mysql_service_descriptor_location }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+  when:
+    - mysql_service_file_stat.stat.exists | bool
+  tags:
+    - molecule-idempotence-notest
+  notify: daemon-reload mysql
+
+- name: "({{ ansible_distribution }}) MySQL::Config - Generate mariadb service file."
+  template:
+    src: maria.service.j2
+    dest: "{{ maria_service_descriptor_location }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+  when:
+    - maria_service_file_stat.stat.exists | bool
+  tags:
+    - molecule-idempotence-notest
+  notify: daemon-reload mysql

@@ -1,3 +1,7 @@
 ---
 - name: restart mysql
   service: "name={{ mysql_daemon }} state=restarted sleep=5"
+
+- name: daemon-reload mysql
+  shell:
+    cmd: "systemctl daemon-reload{{ mysql_daemon }}"
