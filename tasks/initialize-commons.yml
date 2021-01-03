@@ -3,7 +3,7 @@
 - name: "({{ ansible_distribution }}) MAIN::MySQL - Define mysql/maria service descriptor path"
   set_fact:
     mysql_service_descriptor_location: "/lib/systemd/system/mysql.service"
-    maria_service_descriptor_location: "/usr/lib/systemd/system/mariadb.service"
+    maria_service_descriptor_location: "/lib/systemd/system/mariadb.service"
 
 - name: "({{ ansible_distribution }}) MAIN::MySQL - Check Mysql service file exists"
   stat:
