@@ -31,7 +31,9 @@
 - name: Define mysql_update_debian_cache.
   set_fact:
     mysql_update_debian_cache: "{{ __mysql_update_debian_cache }}"
-  when: mysql_update_debian_cache is not defined
+  when:
+    - mysql_update_debian_cache is not defined
+    - ansible_os_family == "Debian"
 
 - name: Define mysql_daemon.
   set_fact:
