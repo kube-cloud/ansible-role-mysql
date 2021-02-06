@@ -20,7 +20,7 @@
 
 - name: Ensure PyMySQL installed
   pip3:
-    name: "MyMySQL"
+    name: "pymysql"
     state: present
 
 - name: Ensure MySQL packages are installed.
