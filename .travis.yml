@@ -16,7 +16,7 @@ env:
           MOLECULE_NAME: centos7
         - MOLECULE_DISTRO: kubecloudsas/docker-ansible-test:v1.1.0-xenial-py3
           MOLECULE_NAME: xenial
-        - MOLECULE_DISTRO: kubecloudsas/docker-ansible-test:v1.1.0-bionic-py3
+        - MOLECULE_DISTRO: kubecloudsas/docker-ansible-test:v1.1.1-bionic-py3
           MOLECULE_NAME: bionic
 
 # Before install actions
