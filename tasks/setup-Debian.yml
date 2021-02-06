@@ -18,11 +18,6 @@
     name: "{{ deb_mysql_python_package }}"
     state: present
 
-- name: Ensure PyMySQL installed
-  pip3:
-    name: "pymysql"
-    state: present
-
 - name: Ensure MySQL packages are installed.
   apt:
     name: "{{ mysql_packages }}"
